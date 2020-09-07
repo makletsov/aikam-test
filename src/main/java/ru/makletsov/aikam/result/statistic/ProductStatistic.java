@@ -10,11 +10,6 @@ public class ProductStatistic {
     private final String productName;
     private final BigDecimal expenses;
 
-    public ProductStatistic(String productName, BigDecimal expenses) {
-        this.productName = productName;
-        this.expenses = expenses;
-    }
-
     public ProductStatistic(Product product, Collection<Purchase> purchases) {
         productName = product.getProductName();
 
