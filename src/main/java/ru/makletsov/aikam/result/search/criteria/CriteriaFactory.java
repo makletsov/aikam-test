@@ -26,7 +26,7 @@ public class CriteriaFactory {
             return new BadCustomersCriterion(jsonNode.get("badCustomers").asInt());
         }
 
-        throw new IllegalArgumentException("Неверный формат критерияя для поиска");
+        throw new IllegalArgumentException("Неверный формат критерия для поиска");
     }
 
     private static boolean hasLastName(JsonNode jsonNode) {
