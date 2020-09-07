@@ -3,8 +3,8 @@ package ru.makletsov.aikam.io;
 import java.io.*;
 
 public class FileIOManager implements IOManager {
-    private final BufferedReader reader;
-    private final PrintWriter writer;
+    private final File inputFile;
+    private final File outputFile;
 
     public FileIOManager(String inputFileName, String outputFileName) throws IOException {
         if (inputFileName == null) {
@@ -31,35 +31,44 @@ public class FileIOManager implements IOManager {
                     "Возможно он является директорией или не удовлетворяет другим системным требованиям.");
         }
 
-        try {
-            reader = new BufferedReader(new FileReader(file));
-        } catch (FileNotFoundException e) {
-            throw new FileNotFoundException("Не удается открыть файл для чтения по неизвестной причине " + inputFileName + ".");
-        }
+        inputFile = file;
 
         if (outputFileName == null) {
             throw new NullPointerException("Параметр имени файла результата = null.");
         }
 
-        try {
-            writer = new PrintWriter(outputFileName);
-        } catch (IOException e) {
-            throw new FileNotFoundException("Заданный выходной файл существует, но является дирректорией, "
-                    + System.lineSeparator() +
-                    "не существует и не может быть создан по неизвестной причине или"
-                    + System.lineSeparator() +
-                    "существует но не может быть открыт по неизвестной причине " + outputFileName + ".");
-        }
-
+        outputFile = new File(outputFileName);
     }
 
     @Override
-    public BufferedReader getReader() {
+    public BufferedReader getReader() throws FileNotFoundException {
+        BufferedReader reader;
+
+        try {
+            reader = new BufferedReader(new FileReader(inputFile));
+        } catch (FileNotFoundException e) {
+            throw new FileNotFoundException("Не удается открыть файл для чтения по неизвестной причине " + inputFile.getName() + ".");
+        }
+
         return reader;
     }
 
     @Override
-    public PrintWriter getWriter() {
+    public PrintWriter getWriter() throws FileNotFoundException {
+        PrintWriter writer;
+
+        try {
+            writer = new PrintWriter(outputFile);
+        } catch (FileNotFoundException e) {
+            throw new FileNotFoundException("Заданный выходной файл существует, но является дирректорией, "
+                    + System.lineSeparator() +
+                    "не существует и не может быть создан по неизвестной причине или"
+                    + System.lineSeparator() +
+                    "существует но не может быть открыт по неизвестной причине " + outputFile.getName() + ".");
+        } catch (SecurityException e) {
+            throw new SecurityException("Запись в файл невозможна")
+        }
+
         return writer;
     }
 }
