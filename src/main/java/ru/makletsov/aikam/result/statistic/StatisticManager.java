@@ -14,19 +14,19 @@ import java.util.stream.Collectors;
 public class StatisticManager {
     public static StatisticResult getStatistic(LocalDate start, LocalDate end, Session session) {
         if (start == null) {
-            throw new NullPointerException("Given start date is null");
+            throw new NullPointerException("Начальная дата = null");
         }
 
         if (end == null) {
-            throw new NullPointerException("Given end date is null");
+            throw new NullPointerException("Конечная дата = null");
         }
 
         if (session == null) {
-            throw new NullPointerException("Given session is null");
+            throw new NullPointerException("Объект Session = null");
         }
 
         if (start.isAfter(end)) {
-            throw new IllegalArgumentException("Given start date is after the given end date");
+            throw new IllegalArgumentException("Дата начала позже даты конца");
         }
 
         @SuppressWarnings("unchecked")

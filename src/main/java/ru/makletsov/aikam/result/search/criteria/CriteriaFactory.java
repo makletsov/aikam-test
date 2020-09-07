@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 public class CriteriaFactory {
     public static Criterion getCriterion(JsonNode jsonNode) {
         if (jsonNode == null) {
-            throw new NullPointerException("Given json node is null");
+            throw new NullPointerException("Объект json = null");
         }
 
         if (hasLastName(jsonNode)) {
@@ -26,7 +26,7 @@ public class CriteriaFactory {
             return new BadCustomersCriterion(jsonNode.get("badCustomers").asInt());
         }
 
-        throw new IllegalArgumentException("Given criterion has an illegal format");
+        throw new IllegalArgumentException("Неверный формат критерияя для поиска");
     }
 
     private static boolean hasLastName(JsonNode jsonNode) {

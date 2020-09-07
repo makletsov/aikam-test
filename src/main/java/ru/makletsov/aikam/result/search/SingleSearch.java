@@ -16,15 +16,15 @@ public class SingleSearch {
 
     public SingleSearch(JsonNode jsonNode, Session session) {
         if (jsonNode == null) {
-            throw new NullPointerException("Given json node is null");
+            throw new NullPointerException("Объект json = null");
         }
 
         if (session == null) {
-            throw new NullPointerException("Given session is null");
+            throw new NullPointerException("Сессия = null");
         }
 
         if (!session.isOpen()) {
-            throw new IllegalStateException("Given session is closed");
+            throw new IllegalStateException("Сессия закрыта");
         }
 
         this.jsonNode = jsonNode;

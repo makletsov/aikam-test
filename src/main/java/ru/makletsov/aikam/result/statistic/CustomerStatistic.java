@@ -13,7 +13,7 @@ public class CustomerStatistic {
 
     public CustomerStatistic(Customer customer, List<ProductStatistic> productStatistics) {
         if (customer == null) {
-            throw new NullPointerException("Given customer is null");
+            throw new NullPointerException("Объект Customer = null");
         }
 
         name = customer.getFirstName() + " " + customer.getLastName();
