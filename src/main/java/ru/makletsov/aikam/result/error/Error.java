@@ -6,7 +6,7 @@ public class Error implements Result {
     private final String type;
     private final String message;
 
-    private static String TYPE = "error";
+    private final String TYPE = "error";
 
     public Error(String message) {
         type = TYPE;
