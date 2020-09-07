@@ -25,22 +25,6 @@ public class CustomerStatistic {
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
-    public void addStatistic(ProductStatistic productStatistic) {
-        if (productStatistic == null) {
-            throw new NullPointerException("Given product statistic is null");
-        }
-
-        productStatistics.add(productStatistic);
-
-        BigDecimal expenses = productStatistic.getExpenses();
-
-        if (expenses == null) {
-            throw new NullPointerException("Taken expenses is null");
-        }
-
-        totalExpenses = totalExpenses.add(expenses);
-    }
-
     public String getName() {
         return name;
     }
