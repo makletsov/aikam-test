@@ -1,4 +1,4 @@
-package ru.makletsov.aikam;
+package ru.makletsov.aikam.io;
 
 import java.io.*;
 
