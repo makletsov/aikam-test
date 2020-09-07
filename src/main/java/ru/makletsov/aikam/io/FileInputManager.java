@@ -2,11 +2,10 @@ package ru.makletsov.aikam.io;
 
 import java.io.*;
 
-public class FileIOManager implements IOManager {
+public class FileInputManager implements InputManager {
     private final File inputFile;
-    private final File outputFile;
 
-    public FileIOManager(String inputFileName, String outputFileName) throws IOException {
+    public FileInputManager(String inputFileName) throws IOException {
         if (inputFileName == null) {
             throw new NullPointerException("Параметр имени файла входных данных = null.");
         }
@@ -32,12 +31,6 @@ public class FileIOManager implements IOManager {
         }
 
         inputFile = file;
-
-        if (outputFileName == null) {
-            throw new NullPointerException("Параметр имени файла результата = null.");
-        }
-
-        outputFile = new File(outputFileName);
     }
 
     @Override
@@ -51,24 +44,5 @@ public class FileIOManager implements IOManager {
         }
 
         return reader;
-    }
-
-    @Override
-    public PrintWriter getWriter() throws FileNotFoundException {
-        PrintWriter writer;
-
-        try {
-            writer = new PrintWriter(outputFile);
-        } catch (FileNotFoundException e) {
-            throw new FileNotFoundException("Заданный выходной файл существует, но является дирректорией, "
-                    + System.lineSeparator() +
-                    "не существует и не может быть создан по неизвестной причине или"
-                    + System.lineSeparator() +
-                    "существует но не может быть открыт по неизвестной причине " + outputFile.getName() + ".");
-        } catch (SecurityException e) {
-            throw new SecurityException("Запись в файл невозможна")
-        }
-
-        return writer;
     }
 }
