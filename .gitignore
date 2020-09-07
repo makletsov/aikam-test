@@ -1,5 +1,8 @@
+# needless directories
 .idea/
 exclude/
 target/
+lib/
 
+# needless files
 *.iml
