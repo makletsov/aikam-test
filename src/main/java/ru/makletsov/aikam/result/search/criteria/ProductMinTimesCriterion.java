@@ -13,7 +13,8 @@ public class ProductMinTimesCriterion implements Criterion {
     private final Integer minTimes;
 
     @JsonCreator
-    public ProductMinTimesCriterion(@JsonProperty("productName") String productName, @JsonProperty("minTimes") Integer minTimes) {
+    public ProductMinTimesCriterion(@JsonProperty("productName") String productName,
+                                    @JsonProperty("minTimes") Integer minTimes) {
         this.productName = productName;
         this.minTimes = minTimes;
     }
