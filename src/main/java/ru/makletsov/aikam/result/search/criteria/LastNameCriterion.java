@@ -9,7 +9,7 @@ import ru.makletsov.aikam.entities.Customer;
 import java.util.List;
 
 public class LastNameCriterion implements Criterion {
-    private String lastName;
+    private final String lastName;
 
     @JsonCreator
     public LastNameCriterion(@JsonProperty("lastName") String lastName) {
