@@ -9,7 +9,6 @@ import com.fasterxml.jackson.databind.*;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
-import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 import ru.makletsov.aikam.io.FileInputManager;
 import ru.makletsov.aikam.io.FileOutputManager;
@@ -26,23 +25,6 @@ import java.io.*;
 import java.util.stream.Collectors;
 
 public class Main {
-    private static final SessionFactory ourSessionFactory;
-
-    static {
-        try {
-            Configuration configuration = new Configuration();
-            configuration.configure();
-
-            ourSessionFactory = configuration.buildSessionFactory();
-        } catch (Throwable ex) {
-            throw new ExceptionInInitializerError(ex);
-        }
-    }
-
-    public static Session getSession() throws HibernateException {
-        return ourSessionFactory.openSession();
-    }
-
     public static void main(String[] args) {
         ObjectMapper objectMapper = getObjectMapper();
         ObjectWriter objectWriter = getObjectWriter(objectMapper);
@@ -61,10 +43,11 @@ public class Main {
 
         try {
             InputManager inputManager = new FileInputManager(argsHandler.getSource());
-
             BufferedReader reader = inputManager.getReader();
 
-            Result result = getResult(argsHandler.getRunMode(), objectMapper, reader);
+            Session session = getSession();
+
+            Result result = getResult(argsHandler.getRunMode(), objectMapper, reader, session);
 
             writer.print(objectWriter.writeValueAsString(result));
             writer.flush();
@@ -74,9 +57,6 @@ public class Main {
             try {
                 writer.print(objectWriter.writeValueAsString(result));
                 writer.flush();
-
-                //TODO remove line
-                System.out.println(objectWriter.writeValueAsString(result));
             } catch (JsonProcessingException eInner) {
                 printError(e.getMessage());
                 printError(eInner.getMessage());
@@ -106,7 +86,7 @@ public class Main {
         System.err.println("[ERROR] : " + message);
     }
 
-    private static Result getResult(String runMode, ObjectMapper objectMapper, Reader reader) throws IOException {
+    private static Result getResult(String runMode, ObjectMapper objectMapper, Reader reader, Session session) throws IOException {
         Result result;
 
         try {
@@ -123,7 +103,7 @@ public class Main {
 
                     result = new SearchResult(criteria.getList()
                             .stream()
-                            .map(jsonNode -> new SingleSearch(jsonNode, getSession()))
+                            .map(jsonNode -> new SingleSearch(jsonNode, session))
                             .collect(Collectors
                                     .toList()));
                     break;
@@ -141,7 +121,7 @@ public class Main {
                     result = StatisticManager.getStatistic(
                             inputRange.getStartDate(),
                             inputRange.getEndDate(),
-                            getSession());
+                            session);
                     break;
                 default:
                     throw new IllegalArgumentException("Недопустимый тип операции: " + runMode + ".");
@@ -151,5 +131,25 @@ public class Main {
         }
 
         return result;
+    }
+
+    private static Session getSession() throws Exception {
+        Configuration configuration = new Configuration();
+
+        try {
+            configuration.configure();
+        } catch (Exception e) {
+            throw new Exception("Ошибка конфигурации доступа к базе данных");
+        }
+
+        Session session;
+
+        try {
+            session = configuration.buildSessionFactory().openSession();
+        } catch (HibernateException e) {
+            throw new Exception("Ошибка во время доступа к базе данных");
+        }
+
+        return session;
     }
 }
